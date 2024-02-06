@@ -6,7 +6,7 @@ from retriever import doc_retriever
 
 def llm_inference(knowledge_source, query):
     model_path = "./seallm-7b-chat.q4_k_m.gguf"
-    LLM = Llama(model_path=model_path, n_gpu_layers=32, n_threads=6, n_ctx=3584, n_batch=521, verbose=True, temperature=0, cuda_device=0)
+    LLM = Llama(model_path=model_path, n_gpu_layers=0, n_threads=6, n_ctx=3584, n_batch=521, verbose=True, temperature=0, cuda_device=0)
     prompt_template = f"""Kamu adalah seorang asisten penjawab dokumen.\n
     Kamu harus menjawab pertanyaan dari user secara ringkas dan jelas.\n
     Jika memungkinkan, sertakan juga nomor halaman dari dokumen sumber untuk meningkatkan kredibilitas jawabanmu.\n

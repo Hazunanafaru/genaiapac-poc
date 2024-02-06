@@ -1,14 +1,10 @@
 import os
 from file_management import UPLOAD_DIRECTORY
 from langchain.embeddings import GPT4AllEmbeddings
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
-from langchain.document_loaders import TextLoader
 from langchain.document_loaders import PyPDFLoader
 
 #https://python.langchain.com/docs/integrations/text_embedding/gpt4all
-
 def doc_indexer(filename):
     directory = os.path.join(UPLOAD_DIRECTORY, filename)
     loader = PyPDFLoader(directory)
