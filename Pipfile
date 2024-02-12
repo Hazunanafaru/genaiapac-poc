@@ -58,7 +58,7 @@ python-dateutil = "==2.8.2"
 pytz = "==2024.1"
 pyyaml = "==6.0.1"
 referencing = "==0.33.0"
-requests = "==2.31.0"
+requests = "*"
 rich = "==13.7.0"
 rpds-py = "==0.17.1"
 six = "==1.16.0"
@@ -81,6 +81,7 @@ yarl = "==1.9.4"
 zipp = "==3.17.0"
 flask = "*"
 python-dotenv = "*"
+google-cloud-storage = "*"
 
 [dev-packages]
 
