@@ -1,3 +1,4 @@
+import io
 import os
 from requests import get
 from google.cloud import storage
@@ -17,16 +18,20 @@ def download_model(model_location: str, model_path: str) -> str:
 
     match model_location:
         case "gcs":
-            # TODO need to switch to streaming download mode
-            # Ref: https://cloud.google.com/storage/docs/streaming-downloads
             gcs_bucket = model_path.split("/")[2]
             gcs_blob = model_path.split(gcs_bucket)[1][1:]
 
             gcs_client = storage.Client()
 
+            file_obj = io.BytesIO()
+
             bucket = gcs_client.bucket(gcs_bucket)
             blob = bucket.blob(gcs_blob)
-            blob.download_to_filename(model_name)
+            blob.download_to_filename(file_obj)
+                
+            # Before reading from file_obj, remember to rewind with file_obj.seek(0).
+            # Reference: https://github.com/googleapis/python-storage/blob/main/samples/snippets/storage_download_to_stream.py#L48
+            file_obj.seek(0)
             return model_name
         case "huggingface":
             url = model_path + "?download=true"
