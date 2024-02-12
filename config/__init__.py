@@ -10,13 +10,15 @@ def load_config() -> dict:
         config['MODEL_PATH'] = os.environ.get('MODEL_PATH')
 
     # Load model location type 
-    # Available option are local and gcs (TODO)
+    # Available option are local, gcs, and huggingface
     # Default to local
     match os.environ.get('MODEL_LOCATION'):
-        case None:
-            config['MODEL_LOCATION'] = 'local'
+        case "gcs":
+            config['MODEL_LOCATION'] = "gcs"
+        case "huggingface":
+            config['MODEL_LOCATION'] = "huggingface"
         case _:
-            config['MODEL_LOCATION'] = os.environ.get('MODEL_LOCATION')
+            config['MODEL_LOCATION'] = "local"
 
     # Determine environment type
     # Availabel options are dev and prod
