@@ -22,8 +22,6 @@ def load_config() -> dict:
     # Availabel options are dev and prod
     # Default to dev
     match os.environ.get('ENVIRONMENT_TYPE'):
-        case "dev":
-            config['ENVIRONMENT_TYPE'] = "prod"
         case "prod":
             config['ENVIRONMENT_TYPE'] = "prod"
         case _:
