@@ -1,3 +1,5 @@
+"""Module providing API functionality"""
+
 from flask import Flask, render_template, request, jsonify
 from llm import llm_inference
 from config import load_config
@@ -7,6 +9,9 @@ config = load_config()
 
 @app.route("/")
 def home():
+    """
+    Home Endpoint that render index.html
+    """
     return render_template('index.html')
 
 @app.route('/api/v1/inference_query', methods=['POST'])
@@ -26,6 +31,9 @@ def post_inference_query_llm():
     return jsonify(response)
 
 def init_api():
+    """
+    Init Flask API based on environment type
+    """
     if config['ENVIRONMENT_TYPE'] == "prod":
         app.run(host="0.0.0.0", debug=False)
     app.run(debug=True)

@@ -1,5 +1,6 @@
-from api import init_api
+"""Module providing main initial functionality"""
 from dotenv import load_dotenv
+from api import init_api
 
 def main():
     """
