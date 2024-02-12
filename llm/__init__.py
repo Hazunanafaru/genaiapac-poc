@@ -1,7 +1,8 @@
+"""Module providing LLM-related functionality"""
+
 import time
 from llama_cpp import Llama
 from llm.model import download_model, check_model
-
 
 def llm_inference(query: str, model_location: str, model_path: str):
     """
@@ -10,11 +11,21 @@ def llm_inference(query: str, model_location: str, model_path: str):
     Return tupple of latency and prompt output
     """
 
-    if model_location != "local" and check_model(model_path=model_path) is False:
+    if model_location != "local" and check_model(model_path) is False:
         download_model(model_location=model_location, model_path=model_path)
 
-    LLM = Llama(model_path=model_path, n_gpu_layers=32, n_threads=6, n_ctx=3584, n_batch=521, verbose=True, temperature=0, cuda_device=0)
+    llm = Llama(
+        model_path=model_path,
+        n_gpu_layers=32,
+        n_threads=6,
+        n_ctx=3584,
+        n_batch=521,
+        verbose=True,
+        temperature=0,
+        cuda_device=0
+    )
 
+    # pylint: disable=line-too-long
     prompt_template = f"""
     Kamu adalah seorang asisten AI yang akan membantu dokter dalam mengidentifikasi permasalahan pasien. \n
     Kamu akan mendengarkan percakapan antara dokter dengan pasiennya, lalu kamu harus melakukan Name Entity Recognition untuk gejala penyakit pasien. \n
@@ -37,7 +48,7 @@ def llm_inference(query: str, model_location: str, model_path: str):
 
     before = time.time()
     # Process LLM Inference
-    output = LLM(prompt_template, max_tokens=0)
+    output = llm(prompt_template, max_tokens=0)
     after = time.time()
     latency = after - before
 
