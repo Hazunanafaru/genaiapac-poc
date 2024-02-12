@@ -1,3 +1,4 @@
+"""Internal module providing model-related functionality"""
 import io
 import os
 from requests import get
@@ -28,13 +29,15 @@ def download_model(model_location: str, model_path: str) -> str:
             bucket = gcs_client.bucket(gcs_bucket)
             blob = bucket.blob(gcs_blob)
             blob.download_to_filename(file_obj)
-                
+
             # Before reading from file_obj, remember to rewind with file_obj.seek(0).
+            # pylint: disable=line-too-long
             # Reference: https://github.com/googleapis/python-storage/blob/main/samples/snippets/storage_download_to_stream.py#L48
             file_obj.seek(0)
             return model_name
         case "huggingface":
             url = model_path + "?download=true"
+            # pylint: disable=missing-timeout
             with get(url, stream=True) as response:
                 response.raise_for_status()
                 with open(model_name, 'wb') as file:
@@ -42,6 +45,7 @@ def download_model(model_location: str, model_path: str) -> str:
                         file.write(chunk)
             return model_name
         case _:
+            # pylint: disable=broad-exception-raised, line-too-long
             raise Exception("""
             External model location supported are gcs and huggingface.
             For gcs, make sure your model_path follow this format:

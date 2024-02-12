@@ -21,7 +21,11 @@ def post_inference_query_llm():
     """
     data = request.get_json()
     text = data['text']
-    bot_latency, output = llm_inference(query=text, model_path=config['MODEL_PATH'])
+    bot_latency, output = llm_inference(
+        query=text,
+        model_path=config['MODEL_PATH'],
+        model_location=config['MODEL_LOCATION']
+    )
     bot_answer = output['choices'][0]['text'].strip()
     response = {
         "answer": bot_answer,

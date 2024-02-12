@@ -18,7 +18,7 @@ def load_config() -> dict:
     else:
         config['MODEL_PATH'] = os.environ.get('MODEL_PATH')
 
-    # Load model location type 
+    # Load model location type
     # Available option are local, gcs, and huggingface
     # Default to local
     match os.environ.get('MODEL_LOCATION'):
