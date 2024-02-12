@@ -1,5 +1,7 @@
-from llama_cpp import Llama
+"""Module providing LLM-related functionality"""
+
 import time
+from llama_cpp import Llama
 
 def llm_inference(query: str, model_path: str):
     """
@@ -7,8 +9,20 @@ def llm_inference(query: str, model_path: str):
     Take query and model path then compose query to prompt template
     Return tupple of latency and prompt output
     """
-    LLM = Llama(model_path=model_path, n_gpu_layers=32, n_threads=6, n_ctx=3584, n_batch=521, verbose=True, temperature=0, cuda_device=0)
-    prompt_template = f"""Kamu adalah seorang asisten AI yang akan membantu dokter dalam mengidentifikasi permasalahan pasien. \n
+    llm = Llama(
+        model_path=model_path,
+        n_gpu_layers=32,
+        n_threads=6,
+        n_ctx=3584,
+        n_batch=521,
+        verbose=True,
+        temperature=0,
+        cuda_device=0
+    )
+
+    # pylint: disable=line-too-long
+    prompt_template = f"""
+    Kamu adalah seorang asisten AI yang akan membantu dokter dalam mengidentifikasi permasalahan pasien. \n
     Kamu akan mendengarkan percakapan antara dokter dengan pasiennya, lalu kamu harus melakukan Name Entity Recognition untuk gejala penyakit pasien. \n
     Contohnya: "Batuk", "Mual", "Bersin", dll. \n
     Setelah melakukan Name Entity Recognition, kamu harus memberikan kemungkinan diagnosa penyakit pasien beserta kemungkinan (dalam persentase) dan alasan akan diagnosa tersebut. \n
@@ -27,7 +41,7 @@ def llm_inference(query: str, model_path: str):
     ```
     """
     before = time.time()
-    output = LLM(prompt_template, max_tokens=0)
+    output = llm(prompt_template, max_tokens=0)
     after = time.time()
     latency = after - before
     return latency, output
