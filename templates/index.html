@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speech-to-Text Indonesia</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <button id="start-btn">Aktifkan Speech-to-Text</button>
+    <p id="text"></p>
+    <p id="latency"></p>
+    <script>
+        var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'id-ID';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+    
+        document.getElementById('start-btn').addEventListener('click', () => {
+            recognition.start();
+        });
+    
+        recognition.onresult = function(event) {
+            var last = event.results.length - 1;
+            var text = event.results[last][0].transcript;
+            document.getElementById('text').textContent = text;
+    
+            $.ajax({
+                url: '/api/v1/inference_query',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({ 'text': text }),
+                success: function(response) {
+                    document.getElementById('text').textContent = response.answer;
+                    document.getElementById('latency').textContent = 'Jawaban ini digenerate dengan waktu ' + response.latency.toFixed(2) + ' detik';
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        };
+    
+        recognition.onspeechend = function() {
+            recognition.stop();
+        };
+    
+        recognition.onerror = function(event) {
+            document.getElementById('text').textContent = 'Terjadi kesalahan: ' + event.error;
+        };
+    </script>    
+</body>
+</html>
