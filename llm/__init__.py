@@ -48,10 +48,20 @@ def llm_inference(query: str, model_location: str, model_path: str):
 
     before = time.time()
 
-    output = llm(prompt_template, max_tokens=0)
-    logging.debug(f"LLM Output: {output}")
+    res = llm(prompt_template, max_tokens=0)
+    res_id = res["id"].strip()
+    res_prompt_tokens = res["usage"]["prompt_tokens"]
+    res_completion_tokens = res["usage"]["completion_tokens"]
+    res_total_tokens = res["usage"]["total_tokens"]
+    res_text = res["choices"][0]["text"].strip()
+
+    logging.debug(f"LLM Inference ID: {res_id}")
+    logging.debug(f"LLM Inference Prompt Tokens: {res_prompt_tokens}")
+    logging.debug(f"LLM Inference Compl Tokens: {res_completion_tokens}")
+    logging.debug(f"LLM Inference Total Tokens: {res_total_tokens}")
+    logging.debug(f"LLM Inference Text: {res_text}")
 
     after = time.time()
     latency = after - before
 
-    return latency, output
+    return latency, res_text

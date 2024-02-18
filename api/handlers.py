@@ -24,14 +24,13 @@ def post_inference_query_llm():
     text = data['text']
     current_app.logger.debug(f"Text data: {text}")
 
-    latency, output = llm_inference(
+    latency, answer = llm_inference(
         query=text,
         model_path=current_app.config['MODEL_PATH'],
         model_location=current_app.config['MODEL_LOCATION']
     )
-    bot_answer = output['choices'][0]['text'].strip()
     response = {
-        "answer": bot_answer,
+        "answer": answer,
         "latency": latency
     }
     current_app.logger.debug(f"Response: {response}")
