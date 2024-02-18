@@ -1,6 +1,6 @@
 """Module providing LLM-related functionality"""
 
-import time
+import time, logging
 from llama_cpp import Llama
 from llm.model import download_model, check_model
 
@@ -47,8 +47,10 @@ def llm_inference(query: str, model_location: str, model_path: str):
     """
 
     before = time.time()
-    # Process LLM Inference
+
     output = llm(prompt_template, max_tokens=0)
+    logging.debug(f"LLM Output: {output}")
+
     after = time.time()
     latency = after - before
 

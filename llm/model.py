@@ -1,6 +1,5 @@
 """Internal module providing model-related functionality"""
-import io
-import os
+import io, os, logging
 from requests import get
 from google.cloud import storage
 
@@ -21,6 +20,7 @@ def download_model(model_location: str, model_path: str) -> str:
         case "gcs":
             gcs_bucket = model_path.split("/")[2]
             gcs_blob = model_path.split(gcs_bucket)[1][1:]
+            logging.debug(f"GCS Bucket: {gcs_bucket}\nGCS Blob: {gcs_blob}")
 
             gcs_client = storage.Client()
 
@@ -37,6 +37,8 @@ def download_model(model_location: str, model_path: str) -> str:
             return model_name
         case "huggingface":
             url = model_path + "?download=true"
+            logging.debug(f"Huggingface Download URL: {url}")
+
             # pylint: disable=missing-timeout
             with get(url, stream=True) as response:
                 response.raise_for_status()
