@@ -6,7 +6,7 @@ class Config(object):
     MODEL_PATH = os.environ.get('MODEL_PATH')
     MODEL_LOCATION = os.environ.get('MODEL_LOCATION')
     ENVIRONMENT_TYPE = os.environ.get('ENVIRONMENT_TYPE')
-    DEBUG = False
+    DEBUG = os.environ.get('DEBUG')
 
     # Load model_path where model is located in server
     # Default to seallm-7b-chat.q4_k_m.gguf
