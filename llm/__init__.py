@@ -1,14 +1,19 @@
 """Module providing LLM-related functionality"""
 
-import time
+import time, logging
 from llama_cpp import Llama
+from llm.model import download_model, check_model
 
-def llm_inference(query: str, model_path: str):
+def llm_inference(query: str, model_location: str, model_path: str):
     """
     Inference qury to LLM model
     Take query and model path then compose query to prompt template
     Return tupple of latency and prompt output
     """
+
+    if model_location != "local" and check_model(model_path) is False:
+        download_model(model_location=model_location, model_path=model_path)
+
     llm = Llama(
         model_path=model_path,
         n_gpu_layers=32,
@@ -40,8 +45,23 @@ def llm_inference(query: str, model_path: str):
     {query}
     ```
     """
+
     before = time.time()
-    output = llm(prompt_template, max_tokens=0)
+
+    res = llm(prompt_template, max_tokens=0)
+    res_id = res["id"].strip()
+    res_prompt_tokens = res["usage"]["prompt_tokens"]
+    res_completion_tokens = res["usage"]["completion_tokens"]
+    res_total_tokens = res["usage"]["total_tokens"]
+    res_text = res["choices"][0]["text"].strip()
+
+    logging.debug(f"LLM Inference ID: {res_id}")
+    logging.debug(f"LLM Inference Prompt Tokens: {res_prompt_tokens}")
+    logging.debug(f"LLM Inference Compl Tokens: {res_completion_tokens}")
+    logging.debug(f"LLM Inference Total Tokens: {res_total_tokens}")
+    logging.debug(f"LLM Inference Text: {res_text}")
+
     after = time.time()
     latency = after - before
-    return latency, output
+
+    return latency, res_text
