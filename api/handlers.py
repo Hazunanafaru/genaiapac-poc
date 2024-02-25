@@ -1,17 +1,37 @@
 """Module providing backend handlers functionality"""
 from flask import render_template, request, jsonify, current_app, Blueprint
 from llm import llm_inference
-# from api import init_app
-#
-# app = init_app()
+
 handlers_bp = Blueprint('handlers', __name__, template_folder='../templates')
 
 @handlers_bp.route("/")
 def home():
     """
-    Home Endpoint that render index.html
+    Render homepage template
+    TODO: upgrade index.html
     """
     return render_template('index.html')
+
+@handlers_bp.route("/about")
+def about():
+    """
+    Render about template
+    TODO: setup about.html
+    """
+    return render_template('about.html')
+
+@handlers_bp.route("/version")
+def version():
+    """
+    Render biobyte service version JSON
+    """
+    version = {
+        "name": "biobyte-service",
+        "version": "0.1.0-alpha",
+        "status": "OK"
+    }
+
+    return jsonify(version)
 
 @handlers_bp.route('/api/v1/inference_query', methods=['POST'])
 def post_inference_query_llm():

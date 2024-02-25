@@ -1,7 +1,6 @@
 """Module providing main initial functionality"""
-import logging
+import os, logging
 from dotenv import load_dotenv
-from llama_cpp import os
 from api import init_app
 
 def main():
@@ -16,7 +15,7 @@ def main():
 
     if os.environ.get('DEBUG'):
         logging.getLogger().setLevel(logging.DEBUG)
-        app.run(debug=True, port=5000)
+        app.run(debug=True, port=8080)
     else:
         app.run(host="0.0.0.0", debug=False, port=8080)
 
